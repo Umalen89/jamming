@@ -11,7 +11,31 @@ class App extends React.Component {
     super(props);
     this.state = { searchResults:[{id: 1, name:'Wicked Game', artist:'G-Eazy', album:'This things happends too'},
                                   {id:2, name:'Black Spiderman', artist:'Logic', album:'Everybody'},
-                                  {id:3, name:'Enemy',artist:'Imagine Dragons', album:'League of Legends ARCANE theme song'}]}
+                                  {id:3, name:'Enemy',artist:'Imagine Dragons', album:'League of Legends ARCANE theme song'}], 
+                   playlistName: 'The List',
+                   playlistTracks: []};
+
+    this.addTrack = this.addTrack.bind(this);
+    this.removeTrack = this.removeTrack.bind(this);
+  }
+
+  addTrack(track) {
+    let myList = this.state.playlistTracks;
+
+    if(myList.find(trackToSave => trackToSave.id === track.id)){
+      return;
+    }
+
+    myList.push(track);
+    this.setState({ playlistTracks:myList });  
+  }
+
+  removeTrack(track) {
+    let myList = this.state.playlistTracks;
+
+    myList = myList.filter(targetTrack => targetTrack.id !== track.id);
+
+    this.setState({ playlistTracks:myList });
   }
 
   render() {
@@ -23,9 +47,12 @@ class App extends React.Component {
         <SearchBar />
         <div className="App-playlist">
           {/*<!-- Add a SearchResults component -->*/}
-          <SearchResults searchResults={this.state.searchResults}/>
+          <SearchResults searchResults={this.state.searchResults}
+                         onAdd={this.addTrack}/>
           {/*<!-- Add a Playlist component -->*/}
-          <Playlist />
+          <Playlist playlistName={this.state.playlistName}
+                    playlistTracks={this.state.playlistTracks}
+                    onRemove={this.removeTrack}/>
         </div>
       </div>
     </div>
