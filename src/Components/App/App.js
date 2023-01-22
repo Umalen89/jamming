@@ -3,16 +3,15 @@
 import SearchResults from '../SearchResults/SearchResults';
 import Playlist from '../Playlist/Playlist';
 import  SearchBar  from '../SearchBar/SearchBar';
+import Spotify from '../../util/Spotify';
 import './App.css';
 import React from 'react';
 
 class App extends React.Component {
   constructor(props){
     super(props);
-    this.state = { searchResults:[{id: 1, name:'Wicked Game', artist:'G-Eazy', album:'This things happends too'},
-                                  {id:2, name:'Black Spiderman', artist:'Logic', album:'Everybody'},
-                                  {id:3, name:'Enemy',artist:'Imagine Dragons', album:'League of Legends ARCANE theme song'}], 
-                   playlistName: 'The List',
+    this.state = { searchResults:[], 
+                   playlistName: 'New Playlist',
                    playlistTracks: []};
 
     this.addTrack = this.addTrack.bind(this);
@@ -23,7 +22,10 @@ class App extends React.Component {
   }
 
   search(term){
-    console.log(term);
+    Spotify.search(term).then(results => {
+      console.log(results);
+      this.setState({ searchResults:results });
+    })
   }
 
   updatePlaylistName(name){
@@ -50,7 +52,17 @@ class App extends React.Component {
   }
 
   savePlaylist(){
-    const trackURIs = this.state.playlistTracks;
+    const trackURIs = this.state.playlistTracks.map(track => track.uri);
+    const playlistName = this.state.playlistName; 
+
+    Spotify.savePlaylist(playlistName, trackURIs).then(() => {
+      window.alert('Playlist Created');
+      this.setState({ playlistName: 'New Playlist',
+                      playlistTracks: [] });
+                      
+      const playlistName = document.getElementById('inputField');
+      playlistName.value = playlistName.defaultValue;
+    })
   }
 
   render() {

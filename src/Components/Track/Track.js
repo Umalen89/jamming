@@ -32,10 +32,24 @@ class Track extends React.Component {
             <div className="Track-information">
                 <h3>{this.props.track.name}</h3>
                 <p>{this.props.track.artist} | {this.props.track.album}</p>
+                <audio controls>
+                    <source src={this.props.track.preview} type="audio/mpeg" />
+                </audio>
             </div>
             { this.renderAction()}
             </div>
         );
+    }
+
+    componentDidMount(){
+        document.addEventListener('play', function(e){  
+            var audios = document.getElementsByTagName('audio');  
+            for(var i = 0, len = audios.length; i < len;i++){  
+                if(audios[i] !== e.target){  
+                    audios[i].pause();  
+                }  
+            }  
+        }, true);
     }
 }
 
