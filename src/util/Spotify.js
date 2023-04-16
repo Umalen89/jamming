@@ -1,5 +1,5 @@
 let accessToken;
-const userID = '29af94d19bc4440d83d9867af7244a72';
+const userID = '';
 const redirectURI = 'http://thejammproject.surge.sh';
 
 const Spotify = {
